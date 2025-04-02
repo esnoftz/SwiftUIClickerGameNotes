@@ -6,81 +6,70 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-
+    
+    // state variables: anytime its state changes, all places on screen that use that variable update automatically
+    @State var points = 0
+    
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
+        // vertical stack view
+        VStack {
+            
+            Text("My Clicker Game")
+                .font(.largeTitle) // . changes attributes of what you are in (in this case, Text) -- would have to do this manually in UIKit
+                .foregroundStyle(.red) // changes text color
+
+            Spacer() // puts spacer in vertical stack below the Text
+            
+            HStack {
+                Spacer()
+                
+                Text("\(points)")
+                    .font(.largeTitle)
+                
+                Spacer()
+                
+                // button goes below the spacer
+                Button("Push Me") {
+                    // this is a closure, put code of what you want to happen when pushed in here (easier than UIKit)
+                    print("hi")
+                    points += 1
                 }
-                .onDelete(perform: deleteItems)
+                
+                // attributes put below the button is declared belong to the button
+                //.tint(.blue) // changes text color on button
+                //.frame(minWidth: 0, maxWidth: .infinity)
+                .buttonStyle(.borderedProminent) // was manual in UIKit
+                //.background(.red)
+                .tint(.yellow) // changes background color of button now
+                .cornerRadius(12) // makes button more round
+                .font(.largeTitle)
+                
+                
+                Spacer()
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
+            Spacer() // puts spacer in vertical stack below the Button
+            
+            // putting image on button
+            Button(action: {
+                // this is a closure, put code of what you want to happen when pushed in here (easier than UIKit)
+                print("gru")
+                //points += 1
+            }) {
+                Image("GruImage")
             }
-            Text("Select an item")
+            
         }
+        
+        //Spacer() // puts spacer below vertical stack, pushing VStack to top
+        
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
+    
+    
 }
+    #Preview {
+        ContentView()
+    }
+    
 
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
-
-#Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
