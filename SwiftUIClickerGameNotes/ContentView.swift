@@ -18,7 +18,7 @@ struct ContentView: View {
             
             Text("My Clicker Game")
                 .font(.largeTitle) // . changes attributes of what you are in (in this case, Text) -- would have to do this manually in UIKit
-                .foregroundStyle(.red) // changes text color
+                .foregroundStyle(.yellow) // changes text color
 
             Spacer() // puts spacer in vertical stack below the Text
             
@@ -27,11 +27,12 @@ struct ContentView: View {
                 
                 Text("\(points)")
                     .font(.largeTitle)
+                    //.tint(.yellow)
                 
                 Spacer()
                 
                 // button goes below the spacer
-                Button("Push Me") {
+                /*Button("Push Me") {
                     // this is a closure, put code of what you want to happen when pushed in here (easier than UIKit)
                     print("hi")
                     points += 1
@@ -44,10 +45,10 @@ struct ContentView: View {
                 //.background(.red)
                 .tint(.yellow) // changes background color of button now
                 .cornerRadius(12) // makes button more round
-                .font(.largeTitle)
+                .font(.largeTitle)*/
                 
                 
-                Spacer()
+                //Spacer()
             }
             Spacer() // puts spacer in vertical stack below the Button
             
@@ -55,7 +56,7 @@ struct ContentView: View {
             Button(action: {
                 // this is a closure, put code of what you want to happen when pushed in here (easier than UIKit)
                 print("gru")
-                //points += 1
+                points += 1
             }) {
                 Image("GruImage")
             }
